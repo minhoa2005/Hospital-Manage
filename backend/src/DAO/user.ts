@@ -2,14 +2,14 @@
 import { setCookie, clearCookie } from "../config/cookie.js";
 import { connect, sql } from "../config/db.js";
 import bcrypt from "bcryptjs";
-import {generateToken} from "../middleware/jwt.js";
+import { generateToken } from "../middleware/jwt.js";
 import type { Request, Response } from "express";
 
 // const { setCookie, clearCookie } = require('../config/cookie');
 // const { connect, sql } = require('../config/db');
 // const bcrypt = require('bcryptjs');
 // const { generateToken } = require('../middleware/jwt');
-let pool:any;
+let pool: any;
 connect().then((result) => pool = result).catch((error) => console.log("Error:", error));
 
 const userDAO = {
@@ -21,24 +21,13 @@ const userDAO = {
             const hash = await bcrypt.hash(data.password, salt);
             await transaction.begin();
             const request = new sql.Request(transaction)
-            const result:any = await request.query(`
-                insert into Users(UserName, Password)
+            const result: any = await request.query(`
+                insert into User(fullName, email, passwordHash, dateOfBirth, createdAt)
                 OUTPUT INSERTED.UserID
-                values ('${data.username}', '${hash}')
+                values ('${data.fullName}, ${data.email}', '${hash}', ${data.dateOfBirth}, ${data.createdAt})
             `);
             console.log(result);
-            const userId = result.recordset && result.recordset[0] ? result.recordset[0].UserID : null;
-            const getPatients = await request.query(`select * from Patients`);
-            const patientID = getPatients.recordset.length + 1;
-            const createPatientProfile:any = await request.query(
-                `
-                insert into Patients (UserID, Email, PatientID)
-                values('${userId}', '${data.email}', ${patientID})
-                `
-            );
-
-            if (result.rowsAffected[0] > 0 && createPatientProfile.rowsAffected[0] > 0) {
-
+            if (result.rowsAffected[0] > 0) {
                 await transaction.commit();
                 return res.status(200).json({
                     success: true
@@ -65,20 +54,20 @@ const userDAO = {
 
         try {
             const { data } = req.body;
-            console.log("1", req.cookies);
-            const user:any = await pool!.request().query(`
-                select * from Users where UserName = '${data.username}'
+            // console.log("1", req.cookies);
+            const user: any = await pool!.request().query(`
+                select u.email, u.id, r.roleName from [User] u
+                join UserRole ur on u.id = ur.userId
+                join Roles r on r.id = ur.RoleId
+                where u.email = '${data.email}'
                 `);
-
-
             if (user.recordsets.length <= 0) {
                 return res.status(400).json({
                     success: false,
                     message: "User not found"
                 });
             }
-            const checkPassword:boolean = await bcrypt.compare(data.password, user.recordset[0].Password);
-
+            const checkPassword: boolean = await bcrypt.compare(data.password, user.recordset[0].passwordHash);
             if (!checkPassword) {
                 return res.status(400).json({
                     success: false,
@@ -86,15 +75,16 @@ const userDAO = {
                 });
             }
             const token = generateToken({
-                username: user.recordset[0].UserName,
-                id: user.recordset[0].UserID
+                email: user.recordset[0].email,
+                id: user.recordset[0].id,
+                role: user.recordset[0].roleName
             });
             setCookie(res, 'token', token);
             return res.status(200).json({
                 success: true,
                 user: {
-                    username: user.recordset[0].UserName,
-                    id: user.recordset[0].UserID
+                    username: user.recordset[0].email,
+                    role: user.recordset[0].roleName
                 }
             })
         }
@@ -136,7 +126,7 @@ const userDAO = {
             }
             return res.status(200).json({
                 success: true,
-                user: result.recordset[0]
+                user: req.user
             });
         }
         catch (error) {

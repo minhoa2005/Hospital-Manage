@@ -1,6 +1,7 @@
 type User = {
     id: number,
-    username: string
+    email: string,
+    role: string
 }
 
-export type {User};
+export type { User };
