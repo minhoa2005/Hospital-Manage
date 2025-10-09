@@ -4,7 +4,7 @@ const ConnectionPool = sql.ConnectionPool;
 const config = {
     user: 'sa',
     password: '123',
-    database: 'PE_DBI202_Fa2024',
+    database: 'Hospital_Project',
     server: `host.docker.internal`,
     options: {
         encrypt: false,
@@ -12,7 +12,7 @@ const config = {
     },
     port: 1433
 }
-let pool:any;
+let pool: any;
 const connect = async () => {
     try {
         if (!pool) {
@@ -26,4 +26,4 @@ const connect = async () => {
     }
 }
 
-export {connect, sql}
+export { connect, sql }
