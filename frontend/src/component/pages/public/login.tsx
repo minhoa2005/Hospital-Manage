@@ -52,7 +52,7 @@ export default function Login() {
     }, [loading])
     return (
         <Paper
-            className="flex justify-center items-center"
+            className="flex justify-center items-center w-50 bg-blue"
             sx={{
                 height: "100vh",
                 backgroundColor: theme.palette.mode === 'dark' ? '#382d2dff' : 'white'
@@ -78,12 +78,12 @@ export default function Login() {
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <hr />
-                <div className="flex flex-row items-center justify-center">
+                <Box className="flex flex-row items-center justify-center" sx={{ mt: 2 }}>
                     <Button sx={{ width: "50%" }} variant="contained" onClick={handleLogin}>
                         Login
                     </Button>
-                </div>
-                <Paper className="mt-2 flex flex-row justify-center gap-3 flex-wrap shadow-none border-none">
+                </Box>
+                <Paper className="mt-2 flex flex-row justify-center gap-3 flex-wrap" sx={{ border: 'none', boxShadow: 'none' }}>
                     <Link href="/register" sx={{ textDecoration: "none" }}>
                         Create your account
                     </Link>

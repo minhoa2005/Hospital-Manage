@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { connect } from "../config/db.js";
 
 
-let pool:any;
+let pool: any;
 connect().then((result) => pool = result).catch((error: unknown) => console.log(error));
 const appartmentDao = {
     getAll: async (req: Request, res: Response) => {
@@ -41,7 +41,7 @@ const appartmentDao = {
             const { id } = req.params;
             const data = req.body;
             console.log(id, data)
-            const result:any = await pool!.request().query(`
+            const result: any = await pool!.request().query(`
                 update Departments
                 set Name = '${data.name}', Location = '${data.location}', PhoneNumber = '${data.phoneNumber}'
                 where DepartmentID = ${id}
