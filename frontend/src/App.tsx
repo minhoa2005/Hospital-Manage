@@ -9,6 +9,7 @@ import { ThemeProvider, CssBaseline, Button } from '@mui/material';
 import { useState } from 'react';
 import { lightTheme, darkTheme } from "./layout/theme.tsx";
 import PublicRoute from './PublicRoute.tsx';
+import PrivateRoute from './PrivateRoute.tsx';
 
 function App() {
   const [isDark, setIsDark] = useState(false);
@@ -27,8 +28,16 @@ function App() {
         <Router>
           <UserProvider>
             <Routes>
-              <Route path='/apartment-list' element={<Apartment />} />
-              <Route path='/apartment/edit/:id' element={<ApartmentDetail />} />
+              <Route path='/apartment-list' element={
+                <PrivateRoute>
+                  <Apartment />
+                </PrivateRoute>
+              } />
+              <Route path='/apartment/edit/:id' element={
+                <PrivateRoute>
+                  <ApartmentDetail />
+                </PrivateRoute>
+              } />
               <Route path='/login' element={
                 <PublicRoute>
                   <Login />

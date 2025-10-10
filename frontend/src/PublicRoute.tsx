@@ -6,7 +6,7 @@ export default function PublicRoute({ children }: any) {
     useEffect(() => {
         if (loading) return;
         if (authen) {
-            window.location.href = "/login"
+            window.location.href = "/dashboard"
         }
     }, [loading, authen])
     return (

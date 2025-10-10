@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import publicService from '../../../service/public.ts';
 import { useNavigate } from 'react-router-dom'
+import { Box, Paper, TextField, Typography } from '@mui/material';
 
 export default function Register() {
     const [fullName, setFullName] = useState('');
@@ -58,57 +59,60 @@ export default function Register() {
         }
     }
     return (
-        <div className="flex justify-center items-center h-screen">
-            <div className="p-5 w-[30%] shadow-md rounded-lg border border-gray-200">
-                <h2 className="text-2xl font-semibold mb-2">Login</h2>
+        <Paper className="flex justify-center items-center h-screen">
+            <Paper className="p-5 w-[30%]" sx={{ border: '1px solid gray' }}>
+                <Typography variant='h4' className=" font-semibold mb-2">Create your account</Typography>
                 <hr className="my-3" />
 
                 {error.fullNameE && (
                     <p className="text-red-500 mb-0">{error?.fullNameE}</p>
                 )}
                 <div className="mb-3">
-                    <label className="block mb-1 font-medium">Full Name:</label>
-                    <input
+                    <TextField
+                        label="Full Name"
+                        type='text'
+                        required
+                        fullWidth
+                        margin='normal'
                         onChange={(e) => setFullName(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        type="text"
                     />
                 </div>
-
                 {error.passE && <p className="text-red-500 mb-0">{error?.passE}</p>}
                 <div className="mb-3">
-                    <label className="block mb-1 font-medium">Password:</label>
-                    <input
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        type="password"
-                    />
-                </div>
-
-                {error.emailC && <p className="text-red-500 mb-0">{error?.emailC}</p>}
-                <div className="mb-3">
-                    <label className="block mb-1 font-medium">Email:</label>
-                    <input
-                        className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        type="email"
+                    <TextField
+                        label="Email"
+                        type='email'
+                        required
+                        fullWidth
+                        margin='normal'
                         onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
-
+                {error.emailC && <p className="text-red-500 mb-0">{error?.emailC}</p>}
+                <div className="mb-3">
+                    <TextField
+                        label="Password"
+                        type='password'
+                        required
+                        fullWidth
+                        margin='normal'
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                </div>
                 {error.confirmPass && (
                     <p className="text-red-500 mb-0">{error?.confirmPass}</p>
                 )}
                 <div className="mb-3">
-                    <label className="block mb-1 font-medium">Confirm Password:</label>
-                    <input
+                    <TextField
+                        label="Confirm Password"
+                        type='password'
+                        required
+                        fullWidth
+                        margin='normal'
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        type="password"
                     />
                 </div>
-
                 <hr className="my-3" />
-
                 <div className="flex flex-row items-center justify-center">
                     <button
                         className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-md w-1/2 transition"
@@ -126,7 +130,7 @@ export default function Register() {
                         Forgot your password?
                     </a>
                 </div>
-            </div>
-        </div>
+            </Paper>
+        </Paper>
     )
 }
