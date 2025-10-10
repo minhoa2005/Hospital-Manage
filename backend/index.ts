@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import cookieParser from "cookie-parser";
-import {connect} from "./src/config/db.js";
+import { connect } from "./src/config/db.js";
 import route from "./src/routes/routes.js";
 const PORT = 3000;
 // const cors_options = {
@@ -13,6 +13,8 @@ const PORT = 3000;
 const app = express();
 app.use(cors({
     origin: 'http://localhost:3001',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
 app.use(express.json());

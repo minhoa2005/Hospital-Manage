@@ -49,7 +49,7 @@ function App() {
                   <Register />
                 </PublicRoute>
               } />
-              <Route path='*' element={<Navigate to="/apartment-list" replace />} />
+              <Route path='*' element={<Navigate to="/login" replace />} />
             </Routes>
           </UserProvider>
         </Router >

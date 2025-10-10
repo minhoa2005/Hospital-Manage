@@ -20,12 +20,11 @@ export default function Login() {
                 password: password
             }
             const result = await login(data);
-            console.log(result);
             if (result.success) {
-                enqueueSnackbar('Login Successful', { variant: 'success', autoHideDuration: 3000 })
-                setEmail('');
-                setPassword('');
-                navigate('/apartment-list');
+                enqueueSnackbar('Đăng nhập thành công!', {
+                    variant: 'success',
+                    autoHideDuration: 2000,
+                });
             }
             else {
                 enqueueSnackbar(result?.message,

@@ -39,6 +39,7 @@ const publicService = {
 
     login: async (data: loginData) => {
         try {
+            console.log(data);
             const result = await api.post('/login', { data });
             return result.data;
         }

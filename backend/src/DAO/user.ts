@@ -19,15 +19,30 @@ const userDAO = {
             const { data } = req.body;
             const salt = await bcrypt.genSalt(10);
             const hash = await bcrypt.hash(data.password, salt);
+            const createdAt = new Date();
+            data.createdAt = createdAt;
+            console.log("Data:", data);
             await transaction.begin();
             const request = new sql.Request(transaction)
+            request.input('fullName', data.fullName);
+            request.input('email', data.email);
+            request.input('passwordHash', hash);
+            request.input('dateOfBirth', data.dateOfBirth ? new Date(data.dateOfBirth) : null);
+            request.input('createdAt', createdAt);
             const result: any = await request.query(`
-                insert into User(fullName, email, passwordHash, dateOfBirth, createdAt)
-                OUTPUT INSERTED.UserID
-                values ('${data.fullName}, ${data.email}', '${hash}', ${data.dateOfBirth}, ${data.createdAt})
+                INSERT INTO [User] (fullName, email, passwordHash, dateOfBirth, createdAt)
+                OUTPUT INSERTED.id
+                VALUES (@fullName, @email, @passwordHash, @dateOfBirth, @createdAt)
             `);
-            console.log(result);
-            if (result.rowsAffected[0] > 0) {
+            console.log("Result:", result);
+            const requestRole = new sql.Request(transaction)
+            const userId = result.recordset[0].id;
+            requestRole.input('userId', userId)
+            const setRole: any = await requestRole.query(`
+                Insert into UserRole(roleId, userId)
+                values(3, @userId)
+                `)
+            if (result.rowsAffected[0] > 0 && setRole.rowsAffected[0] > 0) {
                 await transaction.commit();
                 return res.status(200).json({
                     success: true
@@ -53,13 +68,11 @@ const userDAO = {
     login: async (req: Request, res: Response) => {
 
         try {
-            const { data } = req.body;
+            const { data }: any = req.body;
             // console.log("1", req.cookies);
-            console.log("data", data);
             const checkEmail: any = await pool!.request().input("email", data.email).query(`
                     select * from [User] where email = @email  
                 `);
-            console.log(checkEmail);
             if (checkEmail.recordset.length <= 0) {
                 return res.status(400).json({
                     success: false,
@@ -72,6 +85,7 @@ const userDAO = {
                 join Roles r on r.id = ur.RoleId
                 where u.email = @email
                 `);
+            console.log("User: ", user);
             if (user.recordset.length <= 0) {
                 return res.status(400).json({
                     success: false,
@@ -128,7 +142,7 @@ const userDAO = {
         try {
             const user = req.user;
             console.log("User from token:", user);
-            const result = await pool!.request().query(`select * from Users where UserID = ${user.id}`);
+            const result = await pool!.request().query(`select * from [User] where id = ${user.id}`);
             if (result.recordset.length <= 0) {
                 return res.status(400).json({
                     success: false,
