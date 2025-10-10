@@ -1,30 +1,39 @@
 import React, { useEffect, useState } from 'react'
 import publicService from '../../../service/public.ts';
 import { useUserContext } from '../../../UserContext.tsx';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import { Box, TextField, Typography, Button, Link, Paper } from "@mui/material"
+import { useSnackbar } from 'notistack';
+import { useTheme } from '@mui/material/styles';
 
 export default function Login() {
-    const [userName, setUserName] = useState('');
+    const theme = useTheme();
+    const { enqueueSnackbar } = useSnackbar();
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const { login, authen, user, loading } = useUserContext();
     const handleLogin = async () => {
         try {
             const data = {
-                username: userName,
+                email: email,
                 password: password
             }
             const result = await login(data);
             console.log(result);
             if (result.success) {
-                alert('Login Success');
-                setUserName('');
+                enqueueSnackbar('Login Successful', { variant: 'success', autoHideDuration: 3000 })
+                setEmail('');
                 setPassword('');
                 navigate('/apartment-list');
             }
             else {
-                alert('Error ' + result?.message);
-                setUserName('');
+                enqueueSnackbar(result?.message,
+                    {
+                        variant: 'error', autoHideDuration: 3000,
+                        anchorOrigin: { vertical: 'bottom', horizontal: 'right' }
+                    });
+                setEmail('');
                 setPassword('');
                 return;
             }
@@ -42,27 +51,48 @@ export default function Login() {
         }
     }, [loading])
     return (
-        <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
-            <div className="card p-5" style={{ width: "30%" }}>
-                <h2>Login</h2>
+        <Paper
+            className="flex justify-center items-center"
+            sx={{
+                height: "100vh",
+                backgroundColor: theme.palette.mode === 'dark' ? '#382d2dff' : 'white'
+            }}
+        >
+            <Paper className="p-5 w-[30%]">
+                <Typography variant="h2">Login</Typography>
                 <hr />
-                <div>
-                    <label>Username:</label>
-                    <input className="form-control" type="text" onChange={(e) => setUserName(e.target.value)} value={userName} />
-                </div>
-                <div>
-                    <label>Password:</label>
-                    <input className='form-control' type='password' onChange={(e) => setPassword(e.target.value)} value={password} />
-                </div>
+                <TextField
+                    label="Email"
+                    type="email"
+                    required
+                    fullWidth
+                    margin="normal"
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                <TextField
+                    label="Password"
+                    type="password"
+                    required
+                    fullWidth
+                    margin="normal"
+                    onChange={(e) => setPassword(e.target.value)}
+                />
                 <hr />
-                <div className='d-flex flex-row align-items-center justify-content-center'>
-                    <button className='btn btn-primary' style={{ width: "50%" }} onClick={handleLogin}>Login</button>
+                <div className="flex flex-row items-center justify-center">
+                    <Button sx={{ width: "50%" }} variant="contained" onClick={handleLogin}>
+                        Login
+                    </Button>
                 </div>
-                <div className='mt-2 d-flex flex-row justify-content-between'>
-                    <a href='/register'>Create your account</a>
-                    <a href=''>Forgot your password ?</a>
-                </div>
-            </div>
-        </div>
+                <Paper className="mt-2 flex flex-row justify-center gap-3 flex-wrap shadow-none border-none">
+                    <Link href="/register" sx={{ textDecoration: "none" }}>
+                        Create your account
+                    </Link>
+                    <Link href="" sx={{ textDecoration: "none" }}>
+                        Forgot your password ?
+                    </Link>
+                </Paper>
+            </Paper>
+        </Paper>
+
     )
 }

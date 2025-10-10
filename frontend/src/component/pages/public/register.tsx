@@ -3,7 +3,7 @@ import publicService from '../../../service/public.ts';
 import { useNavigate } from 'react-router-dom'
 
 export default function Register() {
-    const [userName, setUserName] = useState('');
+    const [fullName, setFullName] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError]: any = useState({});
@@ -28,17 +28,17 @@ export default function Register() {
             } else {
                 newError.passE = '';
             }
-            if (!userName) {
-                newError.userNameE = 'Cannot be empty';
+            if (!fullName) {
+                newError.fullNameE = 'Cannot be empty';
             } else {
-                newError.userNameE = '';
+                newError.fullNameE = '';
             }
             setError(newError);
-            if (newError.confirmPass || newError.passE || newError.userNameE || newError.emailC) {
+            if (newError.confirmPass || newError.passE || newError.fullNameE || newError.emailC) {
                 return;
             }
             const data = {
-                username: userName,
+                fullName: fullName,
                 password: password,
                 email: email
             }
@@ -58,37 +58,73 @@ export default function Register() {
         }
     }
     return (
-        <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
-            <div className="card p-5" style={{ width: "30%" }}>
-                <h2>Login</h2>
-                <hr />
-                {error.userNameE && (<p className='text-danger mb-0'>{error?.userNameE}</p>)}
-                <div>
-                    <label>Username:</label>
-                    <input onChange={(e) => setUserName(e.target.value)} className="form-control" type="text" />
+        <div className="flex justify-center items-center h-screen">
+            <div className="p-5 w-[30%] shadow-md rounded-lg border border-gray-200">
+                <h2 className="text-2xl font-semibold mb-2">Login</h2>
+                <hr className="my-3" />
+
+                {error.fullNameE && (
+                    <p className="text-red-500 mb-0">{error?.fullNameE}</p>
+                )}
+                <div className="mb-3">
+                    <label className="block mb-1 font-medium">Full Name:</label>
+                    <input
+                        onChange={(e) => setFullName(e.target.value)}
+                        className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        type="text"
+                    />
                 </div>
-                {error.passE && (<p className='text-danger mb-0'>{error?.passE}</p>)}
-                <div>
-                    <label>Password:</label>
-                    <input onChange={(e) => setPassword(e.target.value)} className='form-control' type='password' />
+
+                {error.passE && <p className="text-red-500 mb-0">{error?.passE}</p>}
+                <div className="mb-3">
+                    <label className="block mb-1 font-medium">Password:</label>
+                    <input
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        type="password"
+                    />
                 </div>
-                {error.emailC && (<p className='text-danger mb-0'>{error?.emailC}</p>)}
-                <div>
-                    <label>Email:</label>
-                    <input className='form-control' type='email' onChange={(e) => setEmail(e.target.value)} />
+
+                {error.emailC && <p className="text-red-500 mb-0">{error?.emailC}</p>}
+                <div className="mb-3">
+                    <label className="block mb-1 font-medium">Email:</label>
+                    <input
+                        className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        type="email"
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
                 </div>
-                {error.confirmPass && (<p className='text-danger mb-0'>{error?.confirmPass}</p>)}
-                <div>
-                    <label>Confirm Password:</label>
-                    <input onChange={(e) => setConfirmPassword(e.target.value)} className='form-control' type='password' />
+
+                {error.confirmPass && (
+                    <p className="text-red-500 mb-0">{error?.confirmPass}</p>
+                )}
+                <div className="mb-3">
+                    <label className="block mb-1 font-medium">Confirm Password:</label>
+                    <input
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        type="password"
+                    />
                 </div>
-                <hr />
-                <div className='d-flex flex-row align-items-center justify-content-center'>
-                    <button className='btn btn-primary' style={{ width: "50%" }} onClick={handleRegiser}>Sign Up</button>
+
+                <hr className="my-3" />
+
+                <div className="flex flex-row items-center justify-center">
+                    <button
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-md w-1/2 transition"
+                        onClick={handleRegiser}
+                    >
+                        Sign Up
+                    </button>
                 </div>
-                <div className='mt-2 d-flex flex-column justify-content-center align-items-center'>
-                    <a href='' className='text-decoration-none'>Already have an account ? Login</a>
-                    <a href='' className='text-decoration-none'>Forgot your password ?</a>
+
+                <div className="mt-3 flex flex-col justify-center items-center space-y-1">
+                    <a href="/login" className="text-blue-600 hover:underline">
+                        Already have an account? Login
+                    </a>
+                    <a href="" className="text-blue-600 hover:underline">
+                        Forgot your password?
+                    </a>
                 </div>
             </div>
         </div>

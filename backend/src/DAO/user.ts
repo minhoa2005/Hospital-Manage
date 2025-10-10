@@ -55,13 +55,24 @@ const userDAO = {
         try {
             const { data } = req.body;
             // console.log("1", req.cookies);
-            const user: any = await pool!.request().query(`
-                select u.email, u.id, r.roleName from [User] u
+            console.log("data", data);
+            const checkEmail: any = await pool!.request().input("email", data.email).query(`
+                    select * from [User] where email = @email  
+                `);
+            console.log(checkEmail);
+            if (checkEmail.recordset.length <= 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Email not found'
+                })
+            }
+            const user: any = await pool!.request().input("email", data.email).query(`
+                select u.email, u.id, r.roleName, u.passwordHash from [User] u
                 join UserRole ur on u.id = ur.userId
                 join Roles r on r.id = ur.RoleId
-                where u.email = '${data.email}'
+                where u.email = @email
                 `);
-            if (user.recordsets.length <= 0) {
+            if (user.recordset.length <= 0) {
                 return res.status(400).json({
                     success: false,
                     message: "User not found"
@@ -83,7 +94,7 @@ const userDAO = {
             return res.status(200).json({
                 success: true,
                 user: {
-                    username: user.recordset[0].email,
+                    email: user.recordset[0].email,
                     role: user.recordset[0].roleName
                 }
             })

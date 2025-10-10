@@ -39,15 +39,14 @@ const publicService = {
 
     login: async (data: loginData) => {
         try {
-            console.log(data);
-
             const result = await api.post('/login', { data });
             return result.data;
         }
-        catch (er) {
+        catch (er: any) {
+            console.log(er)
             return {
                 success: false,
-                message: 'Error' + er
+                message: er.response?.data?.message || er.message
             }
         }
     },

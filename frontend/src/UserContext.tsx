@@ -32,7 +32,6 @@ export default function UserProvider({ children }: any) {
                 setUser({});
                 setAuthen(false);
                 setLoading(false);
-                navigate("/login");
             }
         };
         checkAuth();
@@ -42,6 +41,7 @@ export default function UserProvider({ children }: any) {
         setLoading(true);
         try {
             const result = await publicService.login(data);
+            console.log("result: ", result)
             console.log(result);
             if (result.success) {
                 setUser(result.user);
@@ -54,7 +54,7 @@ export default function UserProvider({ children }: any) {
                 setUser({});
                 return {
                     success: false,
-                    message: "Loi cc",
+                    message: result.message,
                 };
             }
         } catch (error) {
@@ -63,7 +63,7 @@ export default function UserProvider({ children }: any) {
             setLoading(false);
             return {
                 success: false,
-                message: "Error cc",
+                message: "Error: " + error,
             };
         }
     };

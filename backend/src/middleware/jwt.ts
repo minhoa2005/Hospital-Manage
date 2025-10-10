@@ -5,6 +5,7 @@ import type { StringValue } from "ms"
 import { JWT_COOKIE_NAME } from "../config/cookie.js";
 import type { Response, Request, NextFunction } from "express";
 import type { User } from "../type/user.js";
+import userDAO from "../DAO/user.js";
 const JWT_SECRET: string = 'project';
 const JWT_EXPIRE: StringValue = '1d';
 
@@ -35,6 +36,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     }
     catch (error) {
         console.log("Error: ", error);
+        userDAO.logout(req, res);
         return res.status(401).json({
             success: false,
             message: 'Invalid Token.'

@@ -1,11 +1,11 @@
 type registerData = {
-    username: string,
+    fullName: string,
     password: string,
     email: string
 };
 
 type loginData = {
-    username: string,
+    email: string,
     password: string
 }
 
