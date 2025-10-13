@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import type { StringValue } from "ms"
 import { JWT_COOKIE_NAME } from "../config/cookie.js";
 import type { Response, Request, NextFunction } from "express";
-import type { User } from "../type/user.js";
+import type { tempUser, User } from "../type/user.js";
 import userDAO from "../DAO/user.js";
 const JWT_SECRET: string = 'project';
 const JWT_EXPIRE: StringValue = '1d';
@@ -20,7 +20,7 @@ const generateToken = (user: User): string => {
 const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     console.log('Verifying token...');
     console.log(req.cookies)
-    const token = req.cookies?.[JWT_COOKIE_NAME!];
+    const token = req.cookies?.[JWT_COOKIE_NAME!] || req.body?.data?.token;
     console.log('Token found:', token);
     if (!token) {
         return res.status(401).json({
@@ -44,11 +44,10 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
-const shortToken = (user: User, expire: StringValue = '1d') => {
+const shortToken = (user: tempUser, expire: StringValue = '1d') => {
     return jwt.sign({
         id: user.id,
         email: user.email,
-        role: user.role
     }, JWT_SECRET, { expiresIn: expire })
 }
 

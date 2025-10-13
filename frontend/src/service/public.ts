@@ -1,6 +1,6 @@
 import axios from "axios";
 import cookie from "js-cookie";
-import type { registerData, loginData } from "../../type/publicType.js"
+import type { registerData, loginData, recoverPassword } from "../../type/publicType.js"
 
 const api = axios.create({
     baseURL: 'http://localhost:3000',
@@ -80,6 +80,22 @@ const publicService = {
             return {
                 success: false,
                 message: 'Error' + error
+            }
+        }
+    },
+
+    createOtp: async (data: recoverPassword) => {
+        try {
+            const result = await api.post('/createOtp', { data });
+            if (result.data.success) {
+                return result.data
+            }
+            return result.data;
+        }
+        catch (error: any) {
+            return {
+                success: false,
+                message: error.response?.data?.message || error.message
             }
         }
     }

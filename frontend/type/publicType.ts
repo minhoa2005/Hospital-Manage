@@ -9,4 +9,8 @@ type loginData = {
     password: string
 }
 
-export type { registerData, loginData };
+type recoverPassword = {
+    email: string
+}
+
+export type { registerData, loginData, recoverPassword };

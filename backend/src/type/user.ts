@@ -4,4 +4,9 @@ type User = {
     role: string
 }
 
-export type { User };
+type tempUser = {
+    id: number,
+    email: string
+}
+
+export type { User, tempUser };

@@ -2,9 +2,9 @@
 import { setCookie, clearCookie } from "../config/cookie.js";
 import { connect, sql } from "../config/db.js";
 import bcrypt from "bcryptjs";
-import { generateToken } from "../middleware/jwt.js";
+import { generateToken, shortToken, verifyToken } from "../middleware/jwt.js";
 import type { Request, Response } from "express";
-import { randomInt } from "crypto";
+import sendOtp from "../autoMail/otp.js";
 // const { setCookie, clearCookie } = require('../config/cookie');
 // const { connect, sql } = require('../config/db');
 // const bcrypt = require('bcryptjs');
@@ -169,24 +169,43 @@ const userDAO = {
             const checkEmail = await pool.request().input("email", data.email).query(`
                     select id from [User] where email = @email
                 `)
-            console.log(checkEmail);
             const userId = checkEmail.recordset[0].id;
             if (userId) {
                 const request = pool.request();
-                const otp = Math.floor(Math.random() * (999999 - 100000)) + 100000;
+                let otp = Math.floor(Math.random() * (999999 - 100000)) + 100000;
                 const createdAt = new Date();
                 const expiredAt = new Date(createdAt.getTime() + 5 * 60 * 1000);
-                console.log(createdAt)
+                //check if a same OTP is in the database and it is not expire yet
+                const checkOtp = await request.query(`select top 1 * from OTP where code = ${otp} and expiresAt > GETDATE() and used = 0 order by createdAt DESC`);
+                if (checkOtp.recordset.length > 0) {
+                    otp = otp - 1 || otp + 1
+                }
+                const limitOtp = await request.input("time", sql.DateTime, new Date(createdAt.getTime() - 2 * 60 * 1000)).query(`select top 1 * from OTP where createdAt > @time and used = 0 order by createdAt DESC`);
+                if (limitOtp.recordset.length > 0) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Only 1 OTP for each 2 minutes'
+                    })
+                }
                 request.input("createdAt", sql.DateTime, createdAt);
                 request.input("expiredAt", sql.DateTime, expiredAt);
                 request.input("userId", parseInt(userId));
                 request.input("otp", otp);
-                const createOtp = await request.query(`
+                await request.query(`
                         insert into OTP(code, used, userId, createdAt, expiresAt)
                         values(@otp, 0, @userId, @createdAt, @expiredAt)
                     `)
-                return res.status(200).json({
-                    success: true,
+                const sendMail = await sendOtp(data.email, otp);
+                if (sendMail) {
+                    const tempToken = await shortToken({ email: data.email, id: userId }, '5m')
+                    return res.status(200).json({
+                        success: true,
+                        token: tempToken
+                    })
+                }
+                return res.status(401).json({
+                    success: false,
+                    message: 'Email service is not working'
                 })
             }
             else {
@@ -204,6 +223,46 @@ const userDAO = {
         }
     },
 
+    verifyOtp: async (req: Request, res: Response) => {
+        try {
+            const { data } = req.body;
+            const checkOtp = await pool.request().input("otp", data.otp).query(`select top 1 * from otp where code = @otp`);
+            if (checkOtp.recordset.length < 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Wrong OTP'
+                })
+            }
+            const tempToken = await shortToken({ email: req.user?.email, id: req.user?.id }, '5m');
+            return res.status(200).json({
+                success: true,
+                token: tempToken
+            })
+        }
+        catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: 'Internal Error: ' + error
+            })
+        }
+    },
+    recoverPassword: async (req: Request, res: Response) => {
+        try {
+            const { data } = req.body;
+            const salt = await bcrypt.genSalt(10);
+            const passwordHash = await bcrypt.hash(data.password, salt);
+            const request = await pool.request().input("passwordHash", passwordHash).query(`update OTP set passwordHash = @passwordHash where id = ${req.user.id}`);
+            return res.status(200).json({
+                success: true,
+            })
+        }
+        catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: 'Internal Error: ' + error
+            })
+        }
+    }
 }
 
 
