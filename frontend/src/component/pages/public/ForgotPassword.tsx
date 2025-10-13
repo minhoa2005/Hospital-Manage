@@ -36,7 +36,7 @@ export default function ForgotPassword() {
     }
     return (
         <Box className='flex justify-center items-center' sx={{ height: '100vh', backgroundColor: theme.palette.background.default }}>
-            <Paper className='w-[40%] p-5'>
+            <Paper className='w-[40%]' sx={{ padding: '20px' }}>
                 <Typography className='' variant='h4'>Going to recover your account</Typography>
                 <hr className='mt-3 mb-3' />
                 <TextField

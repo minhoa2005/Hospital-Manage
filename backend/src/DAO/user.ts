@@ -169,6 +169,12 @@ const userDAO = {
             const checkEmail = await pool.request().input("email", data.email).query(`
                     select id from [User] where email = @email
                 `)
+            if (checkEmail.recordset.length <= 0) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Can not find an user with that email'
+                })
+            }
             const userId = checkEmail.recordset[0].id;
             if (userId) {
                 const request = pool.request();
