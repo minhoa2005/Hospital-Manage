@@ -8,6 +8,8 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
 
   frontend:
     build: ./frontend
@@ -20,3 +22,4 @@ services:
       - PORT=3001
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
+      - TZ=Asia/Ho_Chi_Minh

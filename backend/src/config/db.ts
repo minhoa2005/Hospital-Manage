@@ -1,10 +1,11 @@
 import sql from "mssql";
+import "dotenv/config";
 const ConnectionPool = sql.ConnectionPool;
 
 const config = {
-    user: 'sa',
-    password: '123',
-    database: 'Hospital_Project',
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
     server: `host.docker.internal`,
     options: {
         encrypt: false,

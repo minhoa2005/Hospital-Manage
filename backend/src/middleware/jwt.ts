@@ -20,7 +20,7 @@ const generateToken = (user: User): string => {
 const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     console.log('Verifying token...');
     console.log(req.cookies)
-    const token = req.cookies?.[JWT_COOKIE_NAME];
+    const token = req.cookies?.[JWT_COOKIE_NAME!];
     console.log('Token found:', token);
     if (!token) {
         return res.status(401).json({

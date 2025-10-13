@@ -12,5 +12,6 @@ route.post('/register', userDAO.register);
 route.post('/login', userDAO.login);
 route.get('/logout', userDAO.logout);
 route.get('/auth/me', verifyToken, userDAO.auth);
+route.post('/createOtp', userDAO.createOtp);
 
 export default route

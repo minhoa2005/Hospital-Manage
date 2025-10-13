@@ -4,7 +4,7 @@ import { connect, sql } from "../config/db.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../middleware/jwt.js";
 import type { Request, Response } from "express";
-
+import { randomInt } from "crypto";
 // const { setCookie, clearCookie } = require('../config/cookie');
 // const { connect, sql } = require('../config/db');
 // const bcrypt = require('bcryptjs');
@@ -160,7 +160,50 @@ const userDAO = {
                 message: 'Error' + error
             })
         }
-    }
+    },
+    //Forgot password
+
+    createOtp: async (req: Request, res: Response) => {
+        try {
+            const { data } = req.body;
+            const checkEmail = await pool.request().input("email", data.email).query(`
+                    select id from [User] where email = @email
+                `)
+            console.log(checkEmail);
+            const userId = checkEmail.recordset[0].id;
+            if (userId) {
+                const request = pool.request();
+                const otp = Math.floor(Math.random() * (999999 - 100000)) + 100000;
+                const createdAt = new Date();
+                const expiredAt = new Date(createdAt.getTime() + 5 * 60 * 1000);
+                console.log(createdAt)
+                request.input("createdAt", sql.DateTime, createdAt);
+                request.input("expiredAt", sql.DateTime, expiredAt);
+                request.input("userId", parseInt(userId));
+                request.input("otp", otp);
+                const createOtp = await request.query(`
+                        insert into OTP(code, used, userId, createdAt, expiresAt)
+                        values(@otp, 0, @userId, @createdAt, @expiredAt)
+                    `)
+                return res.status(200).json({
+                    success: true,
+                })
+            }
+            else {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Can not find an user with that email'
+                })
+            }
+        }
+        catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: 'Internal Error: ' + error
+            })
+        }
+    },
+
 }
 
 
