@@ -69,7 +69,7 @@ const userDAO = {
 
         try {
             const { data }: any = req.body;
-            // console.log("1", req.cookies);
+            console.log("1", req.body);
             const checkEmail: any = await pool!.request().input("email", data.email).query(`
                     select * from [User] where email = @email  
                 `);
@@ -239,7 +239,8 @@ const userDAO = {
                     message: 'Wrong OTP'
                 })
             }
-            const tempToken = await shortToken({ email: req.user?.email, id: req.user?.id }, '5m');
+            await pool.request().input('otp', data.otp).query('update OTP set used = 1 where code = @otp');
+            const tempToken = shortToken({ email: req.user?.email, id: req.user?.id }, '5m');
             return res.status(200).json({
                 success: true,
                 token: tempToken
@@ -252,12 +253,14 @@ const userDAO = {
             })
         }
     },
+
+    //them so sanh password cu va moi
     recoverPassword: async (req: Request, res: Response) => {
         try {
             const { data } = req.body;
             const salt = await bcrypt.genSalt(10);
             const passwordHash = await bcrypt.hash(data.password, salt);
-            const request = await pool.request().input("passwordHash", passwordHash).query(`update OTP set passwordHash = @passwordHash where id = ${req.user.id}`);
+            await pool.request().input("passwordHash", passwordHash).query(`update [User] set passwordHash = @passwordHash where id = ${req.user.id}`);
             return res.status(200).json({
                 success: true,
             })

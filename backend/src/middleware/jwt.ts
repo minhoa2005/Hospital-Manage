@@ -18,10 +18,7 @@ const generateToken = (user: User): string => {
 };
 
 const verifyToken = (req: Request, res: Response, next: NextFunction) => {
-    console.log('Verifying token...');
-    console.log(req.cookies)
     const token = req.cookies?.[JWT_COOKIE_NAME!] || req.body?.data?.token;
-    console.log('Token found:', token);
     if (!token) {
         return res.status(401).json({
             success: false,
@@ -35,7 +32,6 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
         next();
     }
     catch (error) {
-        console.log("Error: ", error);
         userDAO.logout(req, res);
         return res.status(401).json({
             success: false,

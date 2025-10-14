@@ -1,6 +1,6 @@
 import axios from "axios";
 import cookie from "js-cookie";
-import type { registerData, loginData, recoverPassword } from "../../type/publicType.js"
+import type { registerData, loginData, recoverPassword, verifyOtpData, resetPasswordData } from "../../type/publicType.js"
 
 const api = axios.create({
     baseURL: 'http://localhost:3000',
@@ -90,6 +90,32 @@ const publicService = {
             if (result.data.success) {
                 return result.data
             }
+            return result.data;
+        }
+        catch (error: any) {
+            return {
+                success: false,
+                message: error.response?.data?.message || error.message
+            }
+        }
+    },
+
+    verifyOtp: async (data: verifyOtpData) => {
+        try {
+            const result = await api.post('/verifyOtp', { data });
+            return result.data;
+        }
+        catch (error: any) {
+            return {
+                success: false,
+                message: error.response?.data?.message || error.message
+            }
+        }
+    },
+
+    resetPassword: async (data: resetPasswordData) => {
+        try {
+            const result = await api.post('/resetPassword', { data });
             return result.data;
         }
         catch (error: any) {

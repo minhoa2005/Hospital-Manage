@@ -18,7 +18,7 @@ export default function ForgotPassword() {
                     variant: "success",
                     autoHideDuration: 3000
                 })
-                navigate('/verify-Otp', { state: result.token });
+                navigate('/verify-Otp', { state: result?.token });
             }
             else {
                 enqueueSnackbar(result.message, {

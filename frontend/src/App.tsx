@@ -1,6 +1,4 @@
 import { Route, Routes, BrowserRouter as Router, Navigate } from 'react-router-dom'
-import Apartment from './component/Apartment.tsx';
-import ApartmentDetail from './component/ApartmentDetail.tsx';
 import Login from './component/pages/public/Login.tsx';
 import Register from './component/pages/public/Register.tsx';
 import UserProvider from './UserContext.tsx';
@@ -12,6 +10,9 @@ import PublicRoute from './PublicRoute.tsx';
 import PrivateRoute from './PrivateRoute.tsx';
 import OtpPage from './component/pages/public/OtpPage.tsx';
 import ForgotPassword from './component/pages/public/ForgotPassword.tsx';
+import RecoverPassword from './component/pages/public/RecoverPassword.tsx';
+import Apartment from './component/Apartment.tsx';
+import ApartmentDetail from './component/ApartmentDetail.tsx';
 
 function App() {
   const [isDark, setIsDark] = useState(false);
@@ -53,6 +54,7 @@ function App() {
               } />
               <Route path='/forgot-password' element={<PublicRoute><ForgotPassword /></PublicRoute>} />
               <Route path='/verify-Otp' element={<PublicRoute><OtpPage /></PublicRoute>} />
+              <Route path='/reset-password' element={<PublicRoute><RecoverPassword /></PublicRoute>} />
               <Route path='*' element={<Navigate to="/login" replace />} />
             </Routes>
           </UserProvider>

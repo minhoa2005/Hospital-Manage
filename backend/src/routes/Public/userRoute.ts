@@ -14,6 +14,6 @@ route.get('/logout', userDAO.logout);
 route.get('/auth/me', verifyToken, userDAO.auth);
 route.post('/createOtp', userDAO.createOtp);
 route.post('/verifyOtp', verifyToken, userDAO.verifyOtp);
-route.post('/recoverPassword', verifyToken, userDAO.recoverPassword);
+route.post('/resetPassword', verifyToken, userDAO.recoverPassword);
 
 export default route

@@ -13,4 +13,14 @@ type recoverPassword = {
     email: string
 }
 
-export type { registerData, loginData, recoverPassword };
+type verifyOtpData = {
+    otp: number,
+    token: string
+}
+
+type resetPasswordData = {
+    password: string,
+    token: string
+}
+
+export type { registerData, loginData, recoverPassword, verifyOtpData, resetPasswordData };

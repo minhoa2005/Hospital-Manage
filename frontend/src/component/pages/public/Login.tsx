@@ -19,12 +19,15 @@ export default function Login() {
                 email: email,
                 password: password
             }
+            console.log(data);
             const result = await login(data);
             if (result.success) {
                 enqueueSnackbar('Đăng nhập thành công!', {
                     variant: 'success',
                     autoHideDuration: 2000,
                 });
+                setEmail('');
+                setPassword('');
             }
             else {
                 enqueueSnackbar(result?.message,
@@ -32,8 +35,6 @@ export default function Login() {
                         variant: 'error', autoHideDuration: 3000,
                         anchorOrigin: { vertical: 'bottom', horizontal: 'right' }
                     });
-                setEmail('');
-                setPassword('');
                 return;
             }
         }
@@ -54,7 +55,6 @@ export default function Login() {
             className="flex justify-center items-center w-50"
             sx={{
                 height: "100vh",
-                backgroundColor: theme.palette.mode === 'dark' ? '#382d2dff' : 'white'
             }}
         >
             <Paper className="p-5 w-[30%]">
