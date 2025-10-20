@@ -9,10 +9,10 @@ export const lightTheme = createTheme({
         },
         text: {
             primary: '#2973B2',
-            secondary: '#9ACBD0'
+            secondary: '#2973B2'
         },
         primary: {
-            main: '#9ACBD0'
+            main: '#2973B2'
         }
     },
 })

@@ -66,17 +66,21 @@ export default function UserProvider({ children }: any) {
         }
     };
     const logout = async () => {
+        setLoading(true);
         try {
             const result = await publicService.logout();
             console.log(result);
             if (result.success) {
+                setLoading(false);
                 setUser({});
                 setAuthen(false);
                 navigate("/login");
             }
         } catch (error) {
+            setLoading(false);
             console.log(error);
         }
+        setLoading(false);
     };
 
     const getCurrentUser = async () => {

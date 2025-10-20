@@ -5,10 +5,12 @@ import bcrypt from "bcryptjs";
 import { generateToken, shortToken, verifyToken } from "../middleware/jwt.js";
 import type { Request, Response } from "express";
 import sendOtp from "../autoMail/otp.js";
+import "dotenv/config"
 // const { setCookie, clearCookie } = require('../config/cookie');
 // const { connect, sql } = require('../config/db');
 // const bcrypt = require('bcryptjs');
 // const { generateToken } = require('../middleware/jwt');
+const JWT_COOKIE_NAME: string = process.env.JWT_COOKIE_NAME!;
 let pool: any;
 connect().then((result) => pool = result).catch((error) => console.log("Error:", error));
 
@@ -104,7 +106,7 @@ const userDAO = {
                 id: user.recordset[0].id,
                 role: user.recordset[0].roleName
             });
-            setCookie(res, 'token', token);
+            setCookie(res, JWT_COOKIE_NAME, token);
             return res.status(200).json({
                 success: true,
                 user: {
@@ -155,6 +157,7 @@ const userDAO = {
             });
         }
         catch (error) {
+            console.log(error);
             return res.status(500).json({
                 success: false,
                 message: 'Error' + error

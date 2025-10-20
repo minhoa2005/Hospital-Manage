@@ -2,12 +2,13 @@
 // const { JWT_COOKIE_NAME } = require('../config/cookie');
 import jwt from "jsonwebtoken";
 import type { StringValue } from "ms"
-import { JWT_COOKIE_NAME } from "../config/cookie.js";
 import type { Response, Request, NextFunction } from "express";
 import type { tempUser, User } from "../type/user.js";
 import userDAO from "../DAO/user.js";
-const JWT_SECRET: string = 'project';
+import "dotenv/config"
+const JWT_SECRET: string = process.env.JWT_SECRET!;
 const JWT_EXPIRE: StringValue = '1d';
+const JWT_COOKIE_NAME: string = process.env.JWT_COOKIE_NAME!;
 
 const generateToken = (user: User): string => {
     return jwt.sign({
@@ -32,6 +33,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
         next();
     }
     catch (error) {
+
         userDAO.logout(req, res);
         return res.status(401).json({
             success: false,

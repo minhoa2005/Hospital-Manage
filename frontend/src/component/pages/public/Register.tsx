@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import publicService from '../../../service/public.ts';
 import { useNavigate } from 'react-router-dom'
-import { Box, Paper, TextField, Typography } from '@mui/material';
+import { Box, Button, Link, Paper, TextField, Typography } from '@mui/material';
 
 export default function Register() {
     const [fullName, setFullName] = useState('');
@@ -65,9 +65,9 @@ export default function Register() {
                 <hr className="my-3" />
 
                 {error.fullNameE && (
-                    <p className="text-red-500 mb-0">{error?.fullNameE}</p>
+                    <Typography className="text-red-500 mb-0">{error?.fullNameE}</Typography>
                 )}
-                <div className="mb-3">
+                <Box className="mb-3">
                     <TextField
                         label="Full Name"
                         type='text'
@@ -76,9 +76,9 @@ export default function Register() {
                         margin='normal'
                         onChange={(e) => setFullName(e.target.value)}
                     />
-                </div>
+                </Box>
                 {error.passE && <p className="text-red-500 mb-0">{error?.passE}</p>}
-                <div className="mb-3">
+                <Box className="mb-3">
                     <TextField
                         label="Email"
                         type='email'
@@ -87,9 +87,9 @@ export default function Register() {
                         margin='normal'
                         onChange={(e) => setEmail(e.target.value)}
                     />
-                </div>
+                </Box>
                 {error.emailC && <p className="text-red-500 mb-0">{error?.emailC}</p>}
-                <div className="mb-3">
+                <Box className="mb-3">
                     <TextField
                         label="Password"
                         type='password'
@@ -98,11 +98,11 @@ export default function Register() {
                         margin='normal'
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                </div>
+                </Box>
                 {error.confirmPass && (
-                    <p className="text-red-500 mb-0">{error?.confirmPass}</p>
+                    <Typography className="text-red-500 mb-0">{error?.confirmPass}</Typography>
                 )}
-                <div className="mb-3">
+                <Box className="mb-3">
                     <TextField
                         label="Confirm Password"
                         type='password'
@@ -111,25 +111,26 @@ export default function Register() {
                         margin='normal'
                         onChange={(e) => setConfirmPassword(e.target.value)}
                     />
-                </div>
+                </Box>
                 <hr className="my-3" />
-                <div className="flex flex-row items-center justify-center">
-                    <button
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-md w-1/2 transition"
+                <Box className="flex flex-row items-center justify-center">
+                    <Button
+                        variant='contained'
+                        fullWidth
                         onClick={handleRegiser}
                     >
                         Sign Up
-                    </button>
-                </div>
+                    </Button>
+                </Box>
 
-                <div className="mt-3 flex flex-col justify-center items-center space-y-1">
-                    <a href="/login" className="text-blue-600 hover:underline">
+                <Box className="mt-3 flex flex-col justify-center items-center space-y-1">
+                    <Link href="/login" className="text-blue-600 hover:underline">
                         Already have an account? Login
-                    </a>
-                    <a href="" className="text-blue-600 hover:underline">
+                    </Link>
+                    <Link href="" className="text-blue-600 hover:underline">
                         Forgot your password?
-                    </a>
-                </div>
+                    </Link>
+                </Box>
             </Paper>
         </Paper>
     )

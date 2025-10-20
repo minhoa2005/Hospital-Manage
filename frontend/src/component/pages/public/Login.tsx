@@ -42,14 +42,14 @@ export default function Login() {
             alert('Error ' + error);
         }
     }
-    useEffect(() => {
-        if (loading) {
-            return;
-        }
-        if (authen && user) {
-            navigate('/apartment-list');
-        }
-    }, [loading])
+    // useEffect(() => {
+    //     if (loading) {
+    //         return;
+    //     }
+    //     if (authen && user) {
+    //         navigate('/apartment-list');
+    //     }
+    // }, [loading])
     return (
         <Paper
             className="flex justify-center items-center w-50"
