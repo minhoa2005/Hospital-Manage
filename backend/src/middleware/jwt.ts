@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import type { StringValue } from "ms"
 import type { Response, Request, NextFunction } from "express";
 import type { tempUser, User } from "../type/user.js";
-import userDAO from "../DAO/user.js";
+import userDAO from "../DAO(old)/user.js";
 import "dotenv/config"
 const JWT_SECRET: string = process.env.JWT_SECRET!;
 const JWT_EXPIRE: StringValue = '1d';

@@ -9,7 +9,7 @@ export default function PublicRoute({ children }: any) {
     const { authen, loading, user } = useUserContext();
     useEffect(() => {
         if (authen) {
-            navigate(user?.role === 'Admin' ? `/admin/home` : user?.role === 'patient' ? '/' : '')
+            navigate(user?.role === 'Admin' ? `/admin/home` : user?.role === 'Patient' ? '/apartment-list' : '')
         }
     }, [authen, navigate])
     return (

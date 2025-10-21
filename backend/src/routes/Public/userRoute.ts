@@ -4,7 +4,7 @@
 // const route = express.Router();
 
 import express from "express";
-import userDAO from "../../DAO/user.js";
+import userDAO from "../../DAO(old)/user.js";
 import { verifyToken } from "../../middleware/jwt.js";
 const route = express.Router();
 
@@ -16,4 +16,4 @@ route.post('/createOtp', userDAO.createOtp);
 route.post('/verifyOtp', verifyToken, userDAO.verifyOtp);
 route.post('/resetPassword', verifyToken, userDAO.recoverPassword);
 
-export default route
+export default route;

@@ -30,7 +30,7 @@ function App() {
             <Header>
               <Routes>
                 <Route path='/apartment-list' element={
-                  <PrivateRoute>
+                  <PrivateRoute role={["Patient", "Doctor", "Nurse"]}>
                     <Apartment />
                   </PrivateRoute>
                 } />
@@ -55,7 +55,7 @@ function App() {
                 <Route path='/verify-Otp' element={<PublicRoute><OtpPage /></PublicRoute>} />
                 <Route path='/reset-password' element={<PublicRoute><RecoverPassword /></PublicRoute>} />
                 {/* admin route */}
-                <Route path='/admin/home' element={<PrivateRoute role="Admin"><Home /></PrivateRoute>} />
+                <Route path='/admin/home' element={<PrivateRoute role={["Admin"]}><Home /></PrivateRoute>} />
                 <Route path='*' element={<Navigate to="/login" replace />} />
               </Routes>
             </Header>
