@@ -42,7 +42,7 @@ const userDAO = {
             requestRole.input('userId', userId)
             const setRole: any = await requestRole.query(`
                 Insert into UserRole(roleId, userId)
-                values(3, @userId)
+                values(5, @userId)
                 `)
             if (result.rowsAffected[0] > 0 && setRole.rowsAffected[0] > 0) {
                 await transaction.commit();
