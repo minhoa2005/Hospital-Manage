@@ -8,12 +8,14 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import ArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useSnackbar } from 'notistack';
+import { useNavigate } from 'react-router-dom';
 export default function Header({ children }: { children: React.ReactNode }) {
     const [anchor, setAnchor] = useState();
     const [anchorMenu, setAnchorMenu] = useState();
     const open = Boolean(anchor);
     const avatarMenu = Boolean(anchorMenu);
     const { authen, user, logout } = useUserContext();
+    const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
     const handleClick = (e: any) => {
         setAnchor(e.currentTarget);
@@ -77,7 +79,7 @@ export default function Header({ children }: { children: React.ReactNode }) {
                                             aria-controls={avatarMenu ? 'ava-menu' : undefined}
                                             src='logo192.png'
                                             alt='avatar'
-                                            style={{ borderRadius: '50%', width: '10%', border: '1px solid gray', objectFit: 'cover', cursor: 'pointer' }}
+                                            style={{ borderRadius: '50%', width: '20%', border: '1px solid gray', objectFit: 'cover', cursor: 'pointer' }}
                                             onClick={(e) => handleOpenAvaMenu(e)}
                                         />
                                     </>
@@ -165,7 +167,7 @@ export default function Header({ children }: { children: React.ReactNode }) {
             }
             {
                 user?.role === 'Admin' && (
-                    <Box sx={{ display: 'flex', padding: '10px', gap: '20px' }}>
+                    <Box sx={{ display: 'flex', padding: '10px', justifyContent: { sm: 'space-between', xl: 'space-around' }, gap: { xs: '10px', lg: '20px', xl: '0px' } }}>
                         <Box
                             component='img'
                             src='logo.png'
@@ -174,20 +176,20 @@ export default function Header({ children }: { children: React.ReactNode }) {
                                 marginLeft: '10px',
                             }}
                         />
-                        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'end', flex: '1' }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'end' }}>
                             {authen ? (
                                 <img
                                     id='ava-control'
                                     aria-controls={avatarMenu ? 'ava-menu' : undefined}
                                     src='logo192.png'
                                     alt='avatar'
-                                    style={{ borderRadius: '50%', width: '3%', border: '1px solid gray', objectFit: 'cover', cursor: 'pointer' }}
+                                    style={{ borderRadius: '50%', width: '20%', border: '1px solid gray', objectFit: 'cover', cursor: 'pointer' }}
                                     onClick={(e) => handleOpenAvaMenu(e)}
                                 />
                             ) : (
                                 <>
-                                    <Link href='/login' sx={{ textDecoration: 'none', padding: '2%', ":hover": { backgroundColor: 'lightgray' }, borderRadius: '30px' }}>Login</Link>
-                                    <Link href='/register' sx={{ textDecoration: 'none', padding: '2%', ":hover": { backgroundColor: 'lightgray' }, borderRadius: '30px' }}>Register</Link>
+                                    <Link href='/login' sx={{ textDecoration: 'none', padding: '5px', ":hover": { backgroundColor: 'lightgray' }, borderRadius: '30px' }}>Login</Link>
+                                    <Link href='/register' sx={{ textDecoration: 'none', padding: '5px', ":hover": { backgroundColor: 'lightgray' }, borderRadius: '30px' }}>Register</Link>
                                 </>
                             )}
                             <Menu
@@ -223,7 +225,7 @@ export default function Header({ children }: { children: React.ReactNode }) {
                                 </MenuItem>
                             </Menu>
                             <Box>
-                                <Button>User List</Button>
+                                <Button onClick={() => navigate('/admin/user-list')}>User List</Button>
                                 <Button>Ticket</Button>
                             </Box>
                         </Box>

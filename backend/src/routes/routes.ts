@@ -6,9 +6,11 @@
 import express from "express";
 import apartmentRoute from "./Apartment/apartmentRoute.js";
 import userRoute from "./Public/userRoute.js";
+import adminRoute from "./Private/Admin/adminRoute.js"
 const route = express.Router();
 
 route.use('/apartment', apartmentRoute);
 route.use('/', userRoute);
+route.use('/admin', adminRoute)
 
 export default route

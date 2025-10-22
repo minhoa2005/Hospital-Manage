@@ -15,6 +15,7 @@ import Apartment from './component/Apartment.tsx';
 import ApartmentDetail from './component/ApartmentDetail.tsx';
 import Header from './layout/Header.tsx';
 import Home from './component/pages/admin/Home.tsx';
+import UserList from './component/pages/admin/ManageUser/UserList.tsx';
 
 function App() {
   const [isDark, setIsDark] = useState(false);
@@ -29,6 +30,7 @@ function App() {
           <UserProvider>
             <Header>
               <Routes>
+                {/* private route */}
                 <Route path='/apartment-list' element={
                   <PrivateRoute role={["Patient", "Doctor", "Nurse"]}>
                     <Apartment />
@@ -39,6 +41,12 @@ function App() {
                     <ApartmentDetail />
                   </PrivateRoute>
                 } />
+                <Route path='/admin/user-list' element={
+                  <PrivateRoute role={["Admin"]}>
+                    <UserList />
+                  </PrivateRoute>
+                } />
+                {/* public route */}
                 <Route path='/login' element={
                   <PublicRoute>
                     <Login />
@@ -50,7 +58,6 @@ function App() {
                     <Register />
                   </PublicRoute>
                 } />
-                {/* public route */}
                 <Route path='/forgot-password' element={<PublicRoute><ForgotPassword /></PublicRoute>} />
                 <Route path='/verify-Otp' element={<PublicRoute><OtpPage /></PublicRoute>} />
                 <Route path='/reset-password' element={<PublicRoute><RecoverPassword /></PublicRoute>} />
