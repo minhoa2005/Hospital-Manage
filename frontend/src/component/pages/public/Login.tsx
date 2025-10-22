@@ -51,7 +51,7 @@ export default function Login() {
     //     }
     // }, [loading])
     return (
-        <Paper
+        <Box
             className="flex justify-center items-center w-50"
             sx={{
                 height: "100vh",
@@ -91,7 +91,7 @@ export default function Login() {
                     </Link>
                 </Paper>
             </Paper>
-        </Paper>
+        </Box>
 
     )
 }

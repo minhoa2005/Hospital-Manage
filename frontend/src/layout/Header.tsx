@@ -47,10 +47,17 @@ export default function Header({ children }: { children: React.ReactNode }) {
     return (
         <Box>
             {user?.role !== "Admin" && (
-                <Box sx={{ display: 'flex', padding: '10px', gap: '20px' }}>
-                    <img src='logo.png' style={{ width: '10%', marginLeft: '10px' }} />
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column', flex: '1' }}>
-                        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginLeft: '25%', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', padding: '10px', justifyContent: { sm: 'space-between', xl: 'space-around' }, gap: { xs: '10px', lg: '20px', xl: '0px' } }} >
+                    <Box
+                        component='img'
+                        src='logo.png'
+                        sx={{
+                            width: { xs: '10%', lg: '7%' },
+                            marginLeft: '10px',
+                        }}
+                    />
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column', gap: '20px' }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                             <Box sx={{ display: 'flex', gap: '10px' }}>
                                 <Box sx={{ display: 'flex', gap: '5px' }}>
                                     <MedicalServicesIcon />
@@ -63,7 +70,6 @@ export default function Header({ children }: { children: React.ReactNode }) {
                                 </Box>
                             </Box>
                             <Box sx={{ display: 'flex', gap: '15px', alignItems: 'center', justifyContent: 'flex-end' }}>
-                                <Button variant='outlined' sx={{ borderRadius: '30px' }}>Promotion</Button>
                                 {authen ? (
                                     <>
                                         <img
@@ -77,8 +83,8 @@ export default function Header({ children }: { children: React.ReactNode }) {
                                     </>
                                 ) : (
                                     <>
-                                        <Link href='/login' sx={{ textDecoration: 'none', padding: '2%', ":hover": { backgroundColor: 'lightgray' }, borderRadius: '30px' }}>Login</Link>
-                                        <Link href='/register' sx={{ textDecoration: 'none', padding: '2%', ":hover": { backgroundColor: 'lightgray' }, borderRadius: '30px' }}>Register</Link>
+                                        <Link href='/login' sx={{ textDecoration: 'none', padding: '5px', ":hover": { backgroundColor: 'lightgray' }, borderRadius: '30px' }}>Login</Link>
+                                        <Link href='/register' sx={{ textDecoration: 'none', padding: '5px', ":hover": { backgroundColor: 'lightgray' }, borderRadius: '30px' }}>Register</Link>
                                     </>
                                 )}
                                 <Menu
@@ -155,70 +161,79 @@ export default function Header({ children }: { children: React.ReactNode }) {
                         </Box>
                     </Box>
                 </Box>
-            )}
-            {user?.role === 'Admin' && (
-                <Box sx={{ display: 'flex', padding: '10px', gap: '20px' }}>
-                    <img src='logo.png' style={{ width: '10%', marginLeft: '10px' }} />
-                    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'end', flex: '1' }}>
-                        {authen ? (
-                            <img
-                                id='ava-control'
-                                aria-controls={avatarMenu ? 'ava-menu' : undefined}
-                                src='logo192.png'
-                                alt='avatar'
-                                style={{ borderRadius: '50%', width: '3%', border: '1px solid gray', objectFit: 'cover', cursor: 'pointer' }}
-                                onClick={(e) => handleOpenAvaMenu(e)}
-                            />
-                        ) : (
-                            <>
-                                <Link href='/login' sx={{ textDecoration: 'none', padding: '2%', ":hover": { backgroundColor: 'lightgray' }, borderRadius: '30px' }}>Login</Link>
-                                <Link href='/register' sx={{ textDecoration: 'none', padding: '2%', ":hover": { backgroundColor: 'lightgray' }, borderRadius: '30px' }}>Register</Link>
-                            </>
-                        )}
-                        <Menu
-                            id='ava-menu'
-                            open={avatarMenu}
-                            anchorEl={anchorMenu}
-                            onClose={handleCloseAvaMenu}
-                        >
-                            <MenuItem>
-                                <ListItemIcon>
-                                    <HistoryIcon fontSize="small" />
-                                </ListItemIcon>
-                                <ListItemText>
-                                    History
-                                </ListItemText>
-                            </MenuItem>
-                            <MenuItem>
-                                <ListItemIcon>
-                                    <AccountIcon fontSize="small" />
-                                </ListItemIcon>
-                                <ListItemText>
-                                    Account Setting
-                                </ListItemText>
-                            </MenuItem>
-                            <Divider />
-                            <MenuItem onClick={() => handleLogout()}>
-                                <ListItemIcon>
-                                    <LogoutIcon fontSize="small" />
-                                </ListItemIcon>
-                                <ListItemText>
-                                    Logout
-                                </ListItemText>
-                            </MenuItem>
-                        </Menu>
-                        <Box>
-                            <Button>User List</Button>
-                            <Button>Ticket</Button>
-                        </Box>
-                    </Box>
-                </Box>
             )
             }
-            <Box sx={{ margin: '5px' }}>
+            {
+                user?.role === 'Admin' && (
+                    <Box sx={{ display: 'flex', padding: '10px', gap: '20px' }}>
+                        <Box
+                            component='img'
+                            src='logo.png'
+                            sx={{
+                                width: { xs: '10%', lg: '7%' },
+                                marginLeft: '10px',
+                            }}
+                        />
+                        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'end', flex: '1' }}>
+                            {authen ? (
+                                <img
+                                    id='ava-control'
+                                    aria-controls={avatarMenu ? 'ava-menu' : undefined}
+                                    src='logo192.png'
+                                    alt='avatar'
+                                    style={{ borderRadius: '50%', width: '3%', border: '1px solid gray', objectFit: 'cover', cursor: 'pointer' }}
+                                    onClick={(e) => handleOpenAvaMenu(e)}
+                                />
+                            ) : (
+                                <>
+                                    <Link href='/login' sx={{ textDecoration: 'none', padding: '2%', ":hover": { backgroundColor: 'lightgray' }, borderRadius: '30px' }}>Login</Link>
+                                    <Link href='/register' sx={{ textDecoration: 'none', padding: '2%', ":hover": { backgroundColor: 'lightgray' }, borderRadius: '30px' }}>Register</Link>
+                                </>
+                            )}
+                            <Menu
+                                id='ava-menu'
+                                open={avatarMenu}
+                                anchorEl={anchorMenu}
+                                onClose={handleCloseAvaMenu}
+                            >
+                                <MenuItem>
+                                    <ListItemIcon>
+                                        <HistoryIcon fontSize="small" />
+                                    </ListItemIcon>
+                                    <ListItemText>
+                                        History
+                                    </ListItemText>
+                                </MenuItem>
+                                <MenuItem>
+                                    <ListItemIcon>
+                                        <AccountIcon fontSize="small" />
+                                    </ListItemIcon>
+                                    <ListItemText>
+                                        Account Setting
+                                    </ListItemText>
+                                </MenuItem>
+                                <Divider />
+                                <MenuItem onClick={() => handleLogout()}>
+                                    <ListItemIcon>
+                                        <LogoutIcon fontSize="small" />
+                                    </ListItemIcon>
+                                    <ListItemText>
+                                        Logout
+                                    </ListItemText>
+                                </MenuItem>
+                            </Menu>
+                            <Box>
+                                <Button>User List</Button>
+                                <Button>Ticket</Button>
+                            </Box>
+                        </Box>
+                    </Box>
+                )
+            }
+            <hr />
+            <Box sx={{ margin: '10px', padding: '10px' }}>
                 {children}
             </Box>
-            <hr></hr>
         </Box >
     )
 }
