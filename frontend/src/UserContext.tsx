@@ -24,6 +24,7 @@ export default function UserProvider({ children }: any) {
             setLoading(true);
             console.log("Checking auth...");
             const check = await publicService.getCurrentUser();
+            console.log(check);
             if (check.success) {
                 setUser(check.user);
                 setAuthen(true);

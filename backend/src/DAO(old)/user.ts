@@ -143,7 +143,6 @@ const userDAO = {
     auth: async (req: Request, res: Response) => {
         try {
             const user = req.user;
-            console.log("User from token:", user);
             const result = await pool!.request().query(`select * from [User] where id = ${user.id}`);
             if (result.recordset.length <= 0) {
                 return res.status(400).json({
@@ -153,7 +152,10 @@ const userDAO = {
             }
             return res.status(200).json({
                 success: true,
-                user: req.user
+                user: {
+                    email: req.user.email,
+                    role: req.user.role
+                }
             });
         }
         catch (error) {

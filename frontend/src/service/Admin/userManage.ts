@@ -9,7 +9,7 @@ const api = axios.create({
 const userManage = {
     getAllUser: async () => {
         try {
-            const response = await api.get('/admin/user-list');
+            const response = await api.get('/admin/users');
             if (response.data.success) {
                 return {
                     success: true,

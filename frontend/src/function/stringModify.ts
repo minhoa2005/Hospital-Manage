@@ -3,5 +3,9 @@ const getAva = (name: string) => {
     if (splitted.length <= 0) {
         return 'OO';
     }
-    return splitted[0]?.toLocaleUpperCase()! + splitted[splitted.length - 1]?.toLocaleUpperCase();
+    return splitted[0]![0]?.toLocaleUpperCase()! + splitted[splitted.length - 1]![0]?.toLocaleUpperCase();
+
 }
+
+
+export { getAva }

@@ -16,6 +16,23 @@ const userManageController = {
                 error: error
             })
         }
+    },
+
+    getUserDetailById: async (req: Request, res: Response) => {
+        try {
+            const { data } = req.body;
+            const result = await userManageService.getUserDetailById(data.id);
+            if (result.success) {
+                return res.status(200).json(result);
+            }
+            return res.status(404).json(result);
+        }
+        catch (error) {
+            return res.status(500).json({
+                success: false,
+                error: error
+            })
+        }
     }
 }
 

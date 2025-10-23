@@ -1,4 +1,4 @@
-import { Box, Button, Typography, Link, Menu, MenuItem, Divider, ListItemIcon, ListItemText } from '@mui/material';
+import { Box, Button, Typography, Link, Menu, MenuItem, Divider, ListItemIcon, ListItemText, Avatar } from '@mui/material';
 import React, { useState } from 'react';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import { useUserContext } from '../UserContext.tsx';
@@ -9,6 +9,7 @@ import ArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
+import { getAva } from '../function/stringModify.ts';
 export default function Header({ children }: { children: React.ReactNode }) {
     const [anchor, setAnchor] = useState();
     const [anchorMenu, setAnchorMenu] = useState();
@@ -52,7 +53,7 @@ export default function Header({ children }: { children: React.ReactNode }) {
                 <Box sx={{ display: 'flex', padding: '10px', justifyContent: { sm: 'space-between', xl: 'space-around' }, gap: { xs: '10px', lg: '20px', xl: '0px' } }} >
                     <Box
                         component='img'
-                        src='logo.png'
+                        src='logo2.png'
                         sx={{
                             width: { xs: '10%', lg: '7%' },
                             marginLeft: '10px',
@@ -73,16 +74,15 @@ export default function Header({ children }: { children: React.ReactNode }) {
                             </Box>
                             <Box sx={{ display: 'flex', gap: '15px', alignItems: 'center', justifyContent: 'flex-end' }}>
                                 {authen ? (
-                                    <>
-                                        <img
-                                            id='ava-control'
-                                            aria-controls={avatarMenu ? 'ava-menu' : undefined}
-                                            src='logo192.png'
-                                            alt='avatar'
-                                            style={{ borderRadius: '50%', width: '20%', border: '1px solid gray', objectFit: 'cover', cursor: 'pointer' }}
-                                            onClick={(e) => handleOpenAvaMenu(e)}
-                                        />
-                                    </>
+                                    <Avatar
+                                        id='ava-control'
+                                        aria-controls={avatarMenu ? 'ava-menu' : undefined}
+                                        alt='avatar'
+                                        sx={{ border: '1px solid gray', cursor: 'pointer' }}
+                                        onClick={(e) => handleOpenAvaMenu(e)}
+                                    >
+                                        {getAva(user?.role)}
+                                    </Avatar>
                                 ) : (
                                     <>
                                         <Link href='/login' sx={{ textDecoration: 'none', padding: '5px', ":hover": { backgroundColor: 'lightgray' }, borderRadius: '30px' }}>Login</Link>
@@ -170,7 +170,7 @@ export default function Header({ children }: { children: React.ReactNode }) {
                     <Box sx={{ display: 'flex', padding: '10px', justifyContent: { sm: 'space-between', xl: 'space-around' }, gap: { xs: '10px', lg: '20px', xl: '0px' } }}>
                         <Box
                             component='img'
-                            src='logo.png'
+                            src='logo2.png'
                             sx={{
                                 width: { xs: '10%', lg: '7%' },
                                 marginLeft: '10px',
@@ -178,14 +178,15 @@ export default function Header({ children }: { children: React.ReactNode }) {
                         />
                         <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'end' }}>
                             {authen ? (
-                                <img
+                                <Avatar
                                     id='ava-control'
                                     aria-controls={avatarMenu ? 'ava-menu' : undefined}
-                                    src='logo192.png'
                                     alt='avatar'
-                                    style={{ borderRadius: '50%', width: '20%', border: '1px solid gray', objectFit: 'cover', cursor: 'pointer' }}
+                                    sx={{ border: '1px solid gray', cursor: 'pointer' }}
                                     onClick={(e) => handleOpenAvaMenu(e)}
-                                />
+                                >
+                                    {getAva(user?.role)}
+                                </Avatar>
                             ) : (
                                 <>
                                     <Link href='/login' sx={{ textDecoration: 'none', padding: '5px', ":hover": { backgroundColor: 'lightgray' }, borderRadius: '30px' }}>Login</Link>
