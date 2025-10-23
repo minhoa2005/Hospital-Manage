@@ -163,8 +163,7 @@ export default function Header({ children }: { children: React.ReactNode }) {
                         </Box>
                     </Box>
                 </Box>
-            )
-            }
+            )}
             {
                 user?.role === 'Admin' && (
                     <Box sx={{ display: 'flex', padding: '10px', justifyContent: { sm: 'space-between', xl: 'space-around' }, gap: { xs: '10px', lg: '20px', xl: '0px' } }}>

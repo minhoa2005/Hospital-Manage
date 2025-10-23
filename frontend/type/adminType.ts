@@ -1,7 +1,8 @@
 type userInfo = {
     fullName: string,
     email: string,
-    roleName: string
+    roleName: string,
+    id: number
 }
 
 type userDetail = userInfo & {

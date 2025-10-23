@@ -27,6 +27,28 @@ const userManage = {
                 message: error.response?.data?.message || error.message
             }
         }
+    },
+
+    getUserDetailById: async (id: number) => {
+        try {
+            const response = await api.get(`/admin/user/${id}`);
+            if (response.data.success) {
+                return {
+                    success: true,
+                    data: response.data.data
+                }
+            }
+            return {
+                success: false,
+                message: response.data?.message || 'Can not find user'
+            }
+        }
+        catch (error: any) {
+            return {
+                success: false,
+                message: error.response?.data?.message || error.message || 'An error occurred'
+            }
+        }
     }
 }
 

@@ -42,6 +42,7 @@ export default function UserProvider({ children }: any) {
         setLoading(true);
         try {
             const result = await publicService.login(data);
+            console.log(result)
             if (result.success) {
                 setUser(result.user);
                 setAuthen(true);

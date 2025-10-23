@@ -20,8 +20,16 @@ const userManageController = {
 
     getUserDetailById: async (req: Request, res: Response) => {
         try {
-            const { data } = req.body;
-            const result = await userManageService.getUserDetailById(data.id);
+            const id: number = parseInt(req.params.id!);
+
+            if (!id) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Invalid user ID'
+                });
+            }
+            const result = await userManageService.getUserDetailById(id);
+            console.log(result)
             if (result.success) {
                 return res.status(200).json(result);
             }

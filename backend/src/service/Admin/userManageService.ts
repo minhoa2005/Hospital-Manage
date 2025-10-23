@@ -7,7 +7,7 @@ connect().then((result) => pool = result).catch((error) => console.log(error));
 const userManageService = {
     getAllUser: async () => {
         try {
-            const result = await pool.request().query(`SELECT u.fullName,u.email,r.roleName FROM [User] u 
+            const result = await pool.request().query(`SELECT u.fullName,u.email,r.roleName, u.id FROM [User] u 
                 JOIN UserRole ur ON  u.id = ur.userId 
                 JOIN Roles r on ur.roleId = r.id`);
             return {
@@ -27,8 +27,8 @@ const userManageService = {
         try {
             const result = await pool.request().input('id', id).query(
                 `
-                SELECT u.fullName,u.email,r.roleName FROM [User] u 
-                JOIN UserRole ur ON  u.id = ur.userId 
+                SELECT u.id, u.fullName,u.email,r.roleName, u.gender, u.dateOfBirth, u.createdAt, u.updatedAt FROM [User] u
+                JOIN UserRole ur ON  u.id = ur.userId
                 JOIN Roles r on ur.roleId = r.id
                 where u.id = @id
                 `

@@ -28,7 +28,6 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     }
     try {
         const decode: string | object = jwt.verify(token, JWT_SECRET);
-        console.log('Decoded token:', decode);
         req.user = decode;
         next();
     }
