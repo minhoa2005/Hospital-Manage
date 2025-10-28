@@ -8,6 +8,7 @@ const route = express.Router();
 route.use(verifyToken);
 
 route.get('/users', checkPermission(["Admin"]), userManageController.getAllUser);
-route.get('/user/:id', checkPermission(["Admin"]), userManageController.getUserDetailById)
+route.get('/user/:id', checkPermission(["Admin"]), userManageController.getUserDetailById);
+route.patch('/user/:id/resetPass', checkPermission(["Admin"]), userManageController.resetPassword);
 
 export default route;

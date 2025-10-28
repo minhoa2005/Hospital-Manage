@@ -4,7 +4,7 @@ import { connect, sql } from "../config/db.js";
 import bcrypt from "bcryptjs";
 import { generateToken, shortToken, verifyToken } from "../middleware/jwt.js";
 import type { Request, Response } from "express";
-import sendOtp from "../autoMail/otp.js";
+import { sendOtp } from "../autoMail/otp.js";
 import "dotenv/config"
 // const { setCookie, clearCookie } = require('../config/cookie');
 // const { connect, sql } = require('../config/db');
@@ -68,10 +68,8 @@ const userDAO = {
     },
 
     login: async (req: Request, res: Response) => {
-
         try {
             const { data }: any = req.body;
-            console.log("1", req.body);
             const checkEmail: any = await pool!.request().input("email", data.email).query(`
                     select * from [User] where email = @email  
                 `);
@@ -87,7 +85,6 @@ const userDAO = {
                 join Roles r on r.id = ur.RoleId
                 where u.email = @email
                 `);
-            console.log("User: ", user);
             if (user.recordset.length <= 0) {
                 return res.status(400).json({
                     success: false,
@@ -143,7 +140,7 @@ const userDAO = {
     auth: async (req: Request, res: Response) => {
         try {
             const user = req.user;
-            const result = await pool!.request().query(`select * from [User] where id = ${user.id}`);
+            const result = await pool!.request().query(`select * from [User] where id = ${user?.id}`);
             if (result.recordset.length <= 0) {
                 return res.status(400).json({
                     success: false,
@@ -153,8 +150,8 @@ const userDAO = {
             return res.status(200).json({
                 success: true,
                 user: {
-                    email: req.user.email,
-                    role: req.user.role
+                    email: req.user?.email,
+                    role: req.user?.role
                 }
             });
         }
@@ -187,7 +184,7 @@ const userDAO = {
                 const createdAt = new Date();
                 const expiredAt = new Date(createdAt.getTime() + 5 * 60 * 1000);
                 //check if a same OTP is in the database and it is not expire yet
-                const checkOtp = await request.query(`select top 1 * from OTP where code = ${otp} and expiresAt > GETDATE() and used = 0 order by createdAt DESC`);
+                const checkOtp = await request.query(`select top 1 * from OTP where code = ${otp} and expiredAt > GETDATE() and used = 0 order by createdAt DESC`);
                 if (checkOtp.recordset.length > 0) {
                     otp = otp - 1 || otp + 1
                 }
@@ -203,12 +200,12 @@ const userDAO = {
                 request.input("userId", parseInt(userId));
                 request.input("otp", otp);
                 await request.query(`
-                        insert into OTP(code, used, userId, createdAt, expiresAt)
+                        insert into OTP(code, used, userId, createdAt, expiredAt)
                         values(@otp, 0, @userId, @createdAt, @expiredAt)
                     `)
                 const sendMail = await sendOtp(data.email, otp);
                 if (sendMail) {
-                    const tempToken = await shortToken({ email: data.email, id: userId }, '5m')
+                    const tempToken = shortToken({ email: data.email, id: userId }, '5m')
                     return res.status(200).json({
                         success: true,
                         token: tempToken
@@ -237,6 +234,18 @@ const userDAO = {
     verifyOtp: async (req: Request, res: Response) => {
         try {
             const { data } = req.body;
+            if (req.user?.id === undefined) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Unauthorized'
+                })
+            }
+            if (req.user?.email === undefined) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Unauthorized'
+                })
+            }
             const checkOtp = await pool.request().input("otp", data.otp).query(`select top 1 * from otp where code = @otp`);
             if (checkOtp.recordset.length < 0) {
                 return res.status(400).json({
@@ -264,7 +273,7 @@ const userDAO = {
             const { data } = req.body;
             const salt = await bcrypt.genSalt(10);
             const passwordHash = await bcrypt.hash(data.password, salt);
-            await pool.request().input("passwordHash", passwordHash).query(`update [User] set passwordHash = @passwordHash where id = ${req.user.id}`);
+            await pool.request().input("passwordHash", passwordHash).query(`update [User] set passwordHash = @passwordHash where id = ${req.user?.id}`);
             return res.status(200).json({
                 success: true,
             })

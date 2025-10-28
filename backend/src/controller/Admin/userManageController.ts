@@ -41,6 +41,40 @@ const userManageController = {
                 error: error
             })
         }
+    },
+
+    resetPassword: async (req: Request, res: Response) => {
+        try {
+            const { id } = req.params;
+            const result = await userManageService.resetPassword(parseInt(id!));
+            if (result.success) {
+                return res.status(200).json({
+                    success: true
+                })
+            }
+            return res.status(result?.status || 500).json({
+                success: false,
+                message: result?.message
+            })
+        }
+        catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error
+            })
+        }
+    },
+
+    disableAccount: async (req: Response, res: Response) => {
+        try {
+            //to be implemented
+        }
+        catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error
+            })
+        }
     }
 }
 

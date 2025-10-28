@@ -13,7 +13,9 @@ import {
     Drawer,
     Divider,
     FormLabel,
-    Avatar
+    Avatar,
+    Menu,
+    MenuItem
 } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import userManage from '../../../../service/Admin/userManage.ts';
@@ -28,9 +30,34 @@ import { getAva } from '../../../../function/stringModify.ts';
 
 export default function UserList() {
     const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState<boolean>(true);
     const { enqueueSnackbar } = useSnackbar();
     const [detail, setDetail] = useState<userDetail | null>(null);
+    const [anchor, setAnchor] = useState<null | HTMLElement>(null);
+    const [anchorData, setAnchorData] = useState<number | null>(null);
+    const open = Boolean(anchor);
+
+    const handleOpenMenu = (e: any) => {
+        const element = e.currentTarget;
+        setAnchorData(element.getAttribute('data-id'));
+        setAnchor(element);
+    }
+
+
+    const resetPassword = async (id: number) => {
+        try {
+            const response = await userManage.resetPassword(id);
+            if (response.success) {
+                enqueueSnackbar(response.message, { variant: 'success', autoHideDuration: 3000 });
+            }
+            else {
+                enqueueSnackbar(response.message, { variant: 'error', autoHideDuration: 3000 });
+            }
+        }
+        catch (error) {
+            enqueueSnackbar(`An unknown error occurred: ${error}`, { variant: 'error', autoHideDuration: 3000 });
+        }
+    };
 
     const fetchUserDetail = async (id: number) => {
         try {
@@ -47,7 +74,7 @@ export default function UserList() {
         catch (error) {
             enqueueSnackbar(`An unknown error occurred: ${error}`, { variant: 'error', autoHideDuration: 3000 });
         }
-    }
+    };
 
     const fetchData = async () => {
         setLoading(true);
@@ -62,7 +89,7 @@ export default function UserList() {
             enqueueSnackbar('Failed to get data from server', { variant: 'error', autoHideDuration: 3000 });
             setLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
         fetchData();
@@ -110,7 +137,15 @@ export default function UserList() {
                                         <TableCell component={'td'}>{user.email}</TableCell>
                                         <TableCell component={'td'}>{user.roleName}</TableCell>
                                         <TableCell component={'td'}>
-                                            <Button variant='outlined' color='info' onClick={(e) => e.stopPropagation()}>
+                                            <Button
+                                                variant='outlined' color='info'
+                                                onClick={(e) => { e.stopPropagation(); handleOpenMenu(e) }}
+                                                id='menu-anchor'
+                                                aria-controls={open ? 'menu' : undefined}
+                                                aria-haspopup="true"
+                                                aria-expanded={open ? 'true' : undefined}
+                                                data-id={user.id}
+                                            >
                                                 Actions
                                                 <ArrowRightIcon />
                                             </Button>
@@ -163,7 +198,7 @@ export default function UserList() {
                                             Disable
                                         </Button>
                                         <Button variant='outlined' color='warning'>
-                                            <ResetIcon />
+                                            <ResetIcon onClick={() => { resetPassword(anchorData!); setAnchor(null); }} />
                                             Reset Password
                                         </Button>
                                     </Box>
@@ -178,6 +213,19 @@ export default function UserList() {
                 </Box >
             )
             }
+            <Menu
+                open={open}
+                id='menu'
+                anchorEl={anchor}
+                anchorOrigin={{ vertical: 'center', horizontal: 'right' }}
+                onClose={() => setAnchor(null)}
+                transformOrigin={{ vertical: 'center', horizontal: 'left' }}
+                sx={{ ml: 1 }}
+            >
+                <MenuItem>Edit</MenuItem>
+                <MenuItem>Disable</MenuItem>
+                <MenuItem onClick={() => { resetPassword(anchorData!); setAnchor(null); }}>Reset Password</MenuItem>
+            </Menu>
         </Box >
     )
 }

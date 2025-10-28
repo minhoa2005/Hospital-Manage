@@ -1,15 +1,14 @@
 import nodemailer from "nodemailer";
 import "dotenv/config"
 
-
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASS
+    }
+})
 const sendOtp = async (email: string, otp: number): Promise<boolean> => {
-    const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: process.env.EMAIL,
-            pass: process.env.EMAIL_PASS
-        }
-    })
     const mail = {
         from: `"Hospital Service" <tranducminh4125@gmail.com>`,
         to: email,
@@ -28,7 +27,7 @@ const sendOtp = async (email: string, otp: number): Promise<boolean> => {
     }
 
     try {
-        const info = await transporter.sendMail(mail);
+        await transporter.sendMail(mail);
         return true
     }
     catch (error) {
@@ -37,4 +36,27 @@ const sendOtp = async (email: string, otp: number): Promise<boolean> => {
     }
 }
 
-export default sendOtp
+const sendResetPassword = async (email: string, newPassword: number): Promise<boolean> => {
+    const mail = {
+        from: `"Hospital Service" <tranducminh4125@gmail.com>`,
+        to: email,
+        subject: "Your new password",
+        html:
+            `
+            <h1>Your new password</h1>
+            <h2 style="color: #333;">${newPassword}</h2>
+            <p>Please change this password after logging in.</p>
+        `
+    }
+
+    try {
+        await transporter.sendMail(mail);
+        return true
+    }
+    catch (error) {
+        console.log(error)
+        return false
+    }
+}
+
+export { sendOtp, sendResetPassword }

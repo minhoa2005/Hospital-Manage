@@ -3,12 +3,18 @@
 import jwt from "jsonwebtoken";
 import type { StringValue } from "ms"
 import type { Response, Request, NextFunction } from "express";
-import type { tempUser, User } from "../type/user.js";
+import type { User } from "../type/user.js";
 import userDAO from "../DAO(old)/user.js";
 import "dotenv/config"
 const JWT_SECRET: string = process.env.JWT_SECRET!;
 const JWT_EXPIRE: StringValue = '1d';
 const JWT_COOKIE_NAME: string = process.env.JWT_COOKIE_NAME!;
+
+interface MyPayLoad extends jwt.JwtPayload {
+    id: number,
+    email: string,
+    role?: string
+}
 
 const generateToken = (user: User): string => {
     return jwt.sign({
@@ -27,12 +33,13 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
         });
     }
     try {
-        const decode: string | object = jwt.verify(token, JWT_SECRET);
-        req.user = decode;
+        const decode = jwt.verify(token, JWT_SECRET) as MyPayLoad;
+        const myDecode: User & { iat?: number | undefined, exp?: number | undefined } = decode;
+        console.log("Decode token: ", decode);
+        req.user = myDecode;
         next();
     }
     catch (error) {
-
         userDAO.logout(req, res);
         return res.status(401).json({
             success: false,
@@ -41,7 +48,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
-const shortToken = (user: tempUser, expire: StringValue = '1d') => {
+const shortToken = (user: User, expire: StringValue = '1d') => {
     return jwt.sign({
         id: user.id,
         email: user.email,

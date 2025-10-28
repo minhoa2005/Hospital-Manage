@@ -49,6 +49,28 @@ const userManage = {
                 message: error.response?.data?.message || error.message || 'An error occurred'
             }
         }
+    },
+
+    resetPassword: async (id: number) => {
+        try {
+            const response = await api.patch(`/admin/user/${id}/resetPass`);
+            if (response.data.success) {
+                return {
+                    success: true,
+                    message: response.data?.message || 'Password reset successfully'
+                }
+            }
+            return {
+                success: false,
+                message: response.data?.message || 'Failed to reset password'
+            }
+        }
+        catch (error: any) {
+            return {
+                success: false,
+                message: error.response?.data?.message || error.message || 'An error occurred'
+            }
+        }
     }
 }
 
