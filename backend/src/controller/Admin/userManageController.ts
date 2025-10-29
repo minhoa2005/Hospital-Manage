@@ -65,9 +65,25 @@ const userManageController = {
         }
     },
 
-    disableAccount: async (req: Response, res: Response) => {
+    disableAccount: async (req: Request, res: Response) => {
         try {
-            //to be implemented
+            const { id } = req.params;
+            if (!id) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Invalid user ID'
+                });
+            }
+            const result = await userManageService.disableAccount(parseInt(id));
+            if (result.success) {
+                return res.status(200).json({
+                    success: true,
+                })
+            }
+            return res.status(result?.status || 500).json({
+                success: false,
+                message: result?.message
+            })
         }
         catch (error) {
             return res.status(500).json({

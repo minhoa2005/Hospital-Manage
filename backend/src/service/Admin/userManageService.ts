@@ -108,6 +108,24 @@ const userManageService = {
                     message: 'Could not find this user'
                 }
             }
+            const result = await pool.request().input('id', id).query(`update [User] set active = 0 where id = @id`);
+            if (result.rowsAffected && result.rowsAffected[0] > 0) {
+                return {
+                    success: true
+                }
+            }
+            return {
+                status: 500,
+                success: false,
+                message: 'Could not disable account'
+            }
+        }
+        catch (error) {
+            return {
+                status: 500,
+                success: false,
+                message: error
+            }
         }
     }
 }

@@ -41,8 +41,21 @@ export default function UserList() {
         const element = e.currentTarget;
         setAnchorData(element.getAttribute('data-id'));
         setAnchor(element);
-    }
+    };
 
+    const disableAccount = async (id: number) => {
+        try {
+            const response = await userManage.disableAccount(id);
+            if (response.success) {
+                enqueueSnackbar('Account disabled successfully', { variant: 'success', autoHideDuration: 3000 });
+            }
+            else {
+                enqueueSnackbar(response.message, { variant: 'error', autoHideDuration: 3000 });
+            }
+        } catch (error) {
+            enqueueSnackbar(`An unknown error occurred: ${error}`, { variant: 'error', autoHideDuration: 3000 });
+        }
+    };
 
     const resetPassword = async (id: number) => {
         try {
@@ -193,13 +206,13 @@ export default function UserList() {
                                             <EditIcon />
                                             Edit
                                         </Button>
-                                        <Button variant='outlined' color='error'>
+                                        <Button variant='outlined' color='error' onClick={() => disableAccount(detail?.id)}>
                                             <BlockIcon />
                                             Disable
                                         </Button>
                                         <Button variant='outlined' color='warning'>
-                                            <ResetIcon onClick={() => { resetPassword(anchorData!); setAnchor(null); }} />
-                                            Reset Password
+                                            <ResetIcon onClick={() => { resetPassword(detail?.id); setAnchor(null); }} />
+                                            {`Reset Password`}
                                         </Button>
                                     </Box>
                                 </Box>

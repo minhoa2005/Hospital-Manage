@@ -71,6 +71,27 @@ const userManage = {
                 message: error.response?.data?.message || error.message || 'An error occurred'
             }
         }
+    },
+
+    disableAccount: async (id: number) => {
+        try {
+            const response = await api.patch(`/admin/user/${id}/disable`);
+            if (response.data.success) {
+                return {
+                    success: true
+                }
+            }
+            return {
+                success: false,
+                message: response.data?.message || 'Failed to disable account'
+            }
+        }
+        catch (error: any) {
+            return {
+                success: false,
+                message: error.response?.data?.message || error.message || 'An error occurred'
+            }
+        }
     }
 }
 
